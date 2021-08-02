@@ -68,18 +68,3 @@ class App:
         )
         result = tx.run(query, person_name=person_name)
         return [record["name"] for record in result]
-
-
-if __name__ == "__main__":
-    scheme = "neo4j"
-    host_name = "localhost"
-    port = 7687
-    url = "{scheme}://{host_name}:{port}".format(scheme=scheme, host_name=host_name, port=port)
-    user = "neo4j"
-    password = "test"
-    app = App(url, user, password)
-    print(app.find_person("Ally"))
-    print(app.get_friends_of("Ally"))
-    print(app.find_person("Rodrigo"))
-    print(app.get_friends_of("Rodrigo"))
-    app.close()
