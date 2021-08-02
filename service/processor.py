@@ -114,7 +114,8 @@ def get_network_of(name):
     person = app.find_person(name)
     if len(person) <= 0:
         app.close()
-        return ["Person {} Not Found".format(name)]
+        return {"Person": "",
+                "Friends": ""}
     friends = app.get_friends_of(name)
     app.close()
     return {"Person": name,
