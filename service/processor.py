@@ -30,6 +30,7 @@ def read_and_process_files():
     insert_relationships(df_relationships_to_insert)
 
 
+# Function to Read the Properties File
 def read_properties():
     try:
         logger.info("Reading Properties...")
@@ -45,6 +46,7 @@ def read_properties():
         logger.error("Error While Reading Properties. Error: {}".format(e))
 
 
+# Function to Process the Properties File. All the Data Processing is done here.
 def processing_properties(df_properties):
     try:
         logger.info("Processing Properties...")
@@ -58,6 +60,7 @@ def processing_properties(df_properties):
         logger.error("Error While Processing Properties. Error: {}".format(e))
 
 
+# Function to Read the Relationships File
 def read_relationships():
     try:
         logger.info("Reading Relationships...")
@@ -73,6 +76,7 @@ def read_relationships():
         logger.error("Error While Reading Relationships. Error: {}".format(e))
 
 
+# Function to Process the Relationships File. All the Data Processing is done here.
 def processing_relationships(df_relationships):
     try:
         logger.info("Processing Relationships...")
@@ -86,6 +90,7 @@ def processing_relationships(df_relationships):
         logger.error("Error While Processing Relationships. Error: {}".format(e))
 
 
+# Function to Create de Relationships to be Inserted into the Database
 def create_relationships(df_properties, df_relationships):
     try:
         logger.info("Creating Relationships...")
@@ -97,6 +102,7 @@ def create_relationships(df_properties, df_relationships):
         logger.error("Error While Creating Relationships. Error: {}".format(e))
 
 
+# Function to Insert the Relationships into the Database
 def insert_relationships(df_relationships_to_insert):
     try:
         logger.info("Inserting Relationships...")
@@ -109,6 +115,7 @@ def insert_relationships(df_relationships_to_insert):
         logger.error("Error While Inserting Relationships. Error: {}".format(e))
 
 
+# Function to Search the Friends of a Person
 def get_network_of(name):
     app = neo4j_processor.App(URL, USER, PASSWORD)
     person = app.find_person(name)
