@@ -14,7 +14,7 @@ logger.setLevel(os.environ.get("LOGLEVEL", "INFO"))
 logger.addHandler(handler)
 
 SCHEME = "neo4j"
-HOST_NAME = "localhost"
+HOST_NAME = "neo4j"
 PORT = 7687
 URL = "{scheme}://{host_name}:{port}".format(scheme=SCHEME, host_name=HOST_NAME, port=PORT)
 USER = "neo4j"
