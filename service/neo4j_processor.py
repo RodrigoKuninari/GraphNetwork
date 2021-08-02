@@ -39,8 +39,7 @@ class App:
     def get_friends_of(self, person_name):
         with self.driver.session() as session:
             result = session.read_transaction(self._get_and_return_friends_of, person_name)
-            for record in result:
-                print("Found person: {record}".format(record=record))
+            return list(dict.fromkeys(result))
 
     @staticmethod
     def _get_and_return_friends_of(tx, name):
@@ -55,6 +54,21 @@ class App:
             friends.append(record["friend"])
         return friends
 
+    def find_person(self, person_name):
+        with self.driver.session() as session:
+            result = session.read_transaction(self._find_and_return_person, person_name)
+            return list(dict.fromkeys(result))
+
+    @staticmethod
+    def _find_and_return_person(tx, person_name):
+        query = (
+            "MATCH (p:Person) "
+            "WHERE p.name = $person_name "
+            "RETURN p.name AS name"
+        )
+        result = tx.run(query, person_name=person_name)
+        return [record["name"] for record in result]
+
 
 if __name__ == "__main__":
     scheme = "neo4j"
@@ -64,9 +78,8 @@ if __name__ == "__main__":
     user = "neo4j"
     password = "test"
     app = App(url, user, password)
-    app.create_friendship("Alice", "Barbara")
-    app.create_friendship("Alice", "Carlos")
-    app.create_friendship("Alice", "David")
-    app.create_friendship("Carlos", "David")
-    app.get_friends_of("Alice")
+    print(app.find_person("Ally"))
+    print(app.get_friends_of("Ally"))
+    print(app.find_person("Rodrigo"))
+    print(app.get_friends_of("Rodrigo"))
     app.close()

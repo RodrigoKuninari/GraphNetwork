@@ -58,28 +58,6 @@ def processing_properties(df_properties):
         logger.error("Error While Processing Properties. Error: {}".format(e))
 
 
-def create_relationships(df_properties, df_relationships):
-    try:
-        logger.info("Creating Relationships...")
-        df_to_insert = pd.merge(df_relationships, df_properties, left_on="ID1", right_on="ID", how="left")
-        df_to_insert = pd.merge(df_to_insert, df_properties, left_on="ID2", right_on="ID", how="left", suffixes=("_Person", "_Friend"))
-        logger.info("Relationships Created!")
-        return df_to_insert
-    except Exception as e:
-        logger.error("Error While Creating Relationships. Error: {}".format(e))
-
-
-def insert_relationships(df_relationships_to_insert):
-    try:
-        logger.info("Inserting Relationships...")
-        app = neo4j_processor.App(URL, USER, PASSWORD)
-        for index, row in df_relationships_to_insert.iterrows():
-            app.create_friendship(row["Value_Person"], row["Value_Friend"])
-        logger.info("Relationships Inserted!")
-    except Exception as e:
-        logger.error("Error While Inserting Relationships. Error: {}".format(e))
-
-
 def read_relationships():
     try:
         logger.info("Reading Relationships...")
@@ -106,3 +84,38 @@ def processing_relationships(df_relationships):
         return df_relationships
     except Exception as e:
         logger.error("Error While Processing Relationships. Error: {}".format(e))
+
+
+def create_relationships(df_properties, df_relationships):
+    try:
+        logger.info("Creating Relationships...")
+        df_to_insert = pd.merge(df_relationships, df_properties, left_on="ID1", right_on="ID", how="left")
+        df_to_insert = pd.merge(df_to_insert, df_properties, left_on="ID2", right_on="ID", how="left", suffixes=("_Person", "_Friend"))
+        logger.info("Relationships Created!")
+        return df_to_insert
+    except Exception as e:
+        logger.error("Error While Creating Relationships. Error: {}".format(e))
+
+
+def insert_relationships(df_relationships_to_insert):
+    try:
+        logger.info("Inserting Relationships...")
+        app = neo4j_processor.App(URL, USER, PASSWORD)
+        for index, row in df_relationships_to_insert.iterrows():
+            app.create_friendship(row["Value_Person"], row["Value_Friend"])
+        logger.info("Relationships Inserted!")
+        app.close()
+    except Exception as e:
+        logger.error("Error While Inserting Relationships. Error: {}".format(e))
+
+
+def get_network_of(name):
+    app = neo4j_processor.App(URL, USER, PASSWORD)
+    person = app.find_person(name)
+    if len(person) <= 0:
+        app.close()
+        return ["Person {} Not Found".format(name)]
+    friends = app.get_friends_of(name)
+    app.close()
+    return {"Person": name,
+            "Friends": friends}
