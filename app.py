@@ -15,21 +15,20 @@ logger.addHandler(handler)
 
 
 def create_app():
-    application = Flask(__name__)
+    app = Flask(__name__)
 
-    @application.before_first_request
+    @app.before_first_request
     def read_files():
-        processor.read_properties()
-        processor.read_relationships()
+        processor.read_and_process_files()
 
-    @application.route("/", methods=["GET"])
+    @app.route("/", methods=["GET"])
     def index():
         return render_template("index.html")
 
-    return application
+    return app
 
 
-application = create_app()
+app = create_app()
 
 if __name__ == "__main__":
     app = create_app()
